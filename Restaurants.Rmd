@@ -1,0 +1,60 @@
+---
+title: "Create a Web Page using R Markdown and Leaflet"
+author: "Rodrigo Padilla"
+date: "2/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Create a web page using R Markdown that features a map created with Leaflet. 
+
+Host your webpage on either GitHub Pages, RPubs, or NeoCities.
+
+Your webpage must contain the date that you created the document, and it must contain a map created with Leaflet. We would love to see you show off your creativity! 
+
+
+## Creating Map
+
+```{r}
+
+##reading data
+data <- read.csv("50best.csv")
+
+##loading libraries
+library(leaflet)
+library(htmltools)
+
+## creating data frame
+mymap <- data.frame(data)
+
+##adding an icon
+restIcon <- makeIcon(
+  iconUrl = "https://cdn.onlinewebfonts.com/svg/img_236767.png",
+  iconWidth = 30, iconHeight = 30,
+  iconAnchorX = 0, iconAnchorY = 0,
+)
+
+##creating the map
+map <- mymap %>% 
+  leaflet() %>% 
+  addTiles() %>%
+  addMarkers(popup = paste
+             ("<br>Country: ",
+             htmlEscape(mymap$Country),
+             "<br>City: ",
+             htmlEscape(mymap$City),
+             "<br>Restaurant: ",
+             htmlEscape(mymap$Name),
+             "<br>Ranking: ",
+             formatC(mymap$Ranking, format = "d", big.mark = ",")
+             ),
+             icon = restIcon
+            )
+
+map 
+```
